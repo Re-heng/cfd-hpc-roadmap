@@ -1,0 +1,8 @@
+name: cfd-hpc
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - matplotlib
+  - numpy
+prefix: /home/heng/miniforge3/envs/cfd-hpc
