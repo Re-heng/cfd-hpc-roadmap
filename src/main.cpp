@@ -2,8 +2,9 @@
 #include <vector>
 #include <fstream>
 #include <string>
+#include <utility>
 
-int index(int x, int y, int nx)
+int idx(int x, int y, int nx)
 {
     return nx * y + x;
 }
@@ -20,11 +21,11 @@ void write_csv(const std::vector<double> &u,
         {
             if (i == nx - 1)
             {
-                file << u[index(i, j, nx)];
+                file << u[idx(i, j, nx)];
             }
             else
             {
-                file << u[index(i, j, nx)];
+                file << u[idx(i, j, nx)];
                 file << ',';
             }
         }
@@ -35,30 +36,80 @@ void write_csv(const std::vector<double> &u,
     }
 }
 
-int main()
+void initial_t_field(std::vector<double> &u,
+                     int nx,
+                     int ny)
 {
-    int nx = 5;
-    int ny = 4;
-    std::vector<double> u(nx * ny, 0.0);
-
-    for (int j = 0; j <= ny - 1; j++)
+    for (int j = 0; j < ny; j++)
     {
-        for (int i = 0; i <= nx - 1; i++)
+        for (int i = 0; i < nx; i++)
         {
-            u[index(i, j, nx)] = i + j * 10;
+
+            if (i >= 1.0 / 4.0 * nx && i < 3.0 / 4.0 * nx && j >= 1.0 / 4.0 * ny && j < 3.0 / 4.0 * ny)
+            {
+                u[idx(i, j, nx)] = 40;
+            }
         }
     }
+}
 
+void print_field(const std::vector<double> &u,
+                 int nx,
+                 int ny)
+{
     for (int j = 0; j <= ny - 1; j++)
     {
         for (int i = 0; i <= nx - 1; i++)
         {
-            std::cout << u[index(i, j, nx)] << ' ';
+            std::cout << u[idx(i, j, nx)] << ' ';
         }
         std::cout << std::endl;
     }
+}
+void step_heat(const std::vector<double> &u_old,
+               std::vector<double> &u_new,
+               int nx,
+               int ny,
+               double alpha)
+{
+    for (int j = 1; j < ny - 1; j++)
+    {
+        for (int i = 1; i < nx - 1; i++)
+        {
+            u_new[idx(i, j, nx)] = u_old[idx(i, j, nx)] + alpha * (u_old[idx(i - 1, j, nx)] + u_old[idx(i + 1, j, nx)] + u_old[idx(i, j - 1, nx)] + u_old[idx(i, j + 1, nx)] - 4 * u_old[idx(i, j, nx)]);
+        }
+    }
+}
 
-    write_csv(u, "results/grid_demo.csv", nx, ny);
-    std::cout << "Wrote results/grid_demo.csv\n";
+int main(int argc, char **argv)
+{
+    int nx = 64;
+    int ny = 64;
+    double alpha = 0.25;
+    int num_step = 500;
+
+    if (argc >= 2)
+    {
+        nx = std::stoi(argv[1]);
+        ny = nx;
+    }
+    if (argc >= 3)
+    {
+        num_step = std::stoi(argv[2]);
+    }
+    if (argc >= 4)
+    {
+        alpha = std::stod(argv[3]);
+    }
+    std::vector<double> u_new(nx * ny, 0.0);
+    std::vector<double> u_old(nx * ny, 0.0);
+    initial_t_field(u_old, nx, ny);
+    for (int step = 0; step < num_step; step++)
+    {
+        step_heat(u_old, u_new, nx, ny, alpha);
+        std::swap(u_old, u_new);
+    }
+    write_csv(u_old, "results/heat_final.csv", nx, ny);
+    std::cout << "Wrote results/heat_final.csv\n";
     return 0;
 }

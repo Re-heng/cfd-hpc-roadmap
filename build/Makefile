@@ -117,24 +117,24 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named grid_demo
+# Target rules for targets named heat2d
 
 # Build rule for target.
-grid_demo: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 grid_demo
-.PHONY : grid_demo
+heat2d: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 heat2d
+.PHONY : heat2d
 
 # fast build rule for target.
-grid_demo/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/grid_demo.dir/build.make CMakeFiles/grid_demo.dir/build
-.PHONY : grid_demo/fast
+heat2d/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/heat2d.dir/build.make CMakeFiles/heat2d.dir/build
+.PHONY : heat2d/fast
 
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
 
 # target to build an object file
 src/main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/grid_demo.dir/build.make CMakeFiles/grid_demo.dir/src/main.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/heat2d.dir/build.make CMakeFiles/heat2d.dir/src/main.cpp.o
 .PHONY : src/main.cpp.o
 
 src/main.i: src/main.cpp.i
@@ -142,7 +142,7 @@ src/main.i: src/main.cpp.i
 
 # target to preprocess a source file
 src/main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/grid_demo.dir/build.make CMakeFiles/grid_demo.dir/src/main.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/heat2d.dir/build.make CMakeFiles/heat2d.dir/src/main.cpp.i
 .PHONY : src/main.cpp.i
 
 src/main.s: src/main.cpp.s
@@ -150,7 +150,7 @@ src/main.s: src/main.cpp.s
 
 # target to generate assembly for a file
 src/main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/grid_demo.dir/build.make CMakeFiles/grid_demo.dir/src/main.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/heat2d.dir/build.make CMakeFiles/heat2d.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
 # Help Target
@@ -161,7 +161,7 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... grid_demo"
+	@echo "... heat2d"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

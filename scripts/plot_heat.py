@@ -13,7 +13,7 @@ print(data.shape)
 print(data)
 
 fig, ax = plt.subplots(1, 1, figsize=(6, 5), constrained_layout=True)
-im = ax.imshow(data, origin="lower", aspect="equal")
+im = ax.imshow(data, origin="lower", aspect="equal", vmin=0, vmax=40)
 ax.set_title("temperature filed")
 
 divider = make_axes_locatable(ax)
