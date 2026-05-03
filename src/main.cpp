@@ -4,6 +4,8 @@
 #include <string>
 #include <utility>
 #include <chrono>
+#include <algorithm>
+#include <numeric>
 
 int idx(int x, int y, int nx)
 {
@@ -82,6 +84,16 @@ void step_heat(const std::vector<double> &u_old,
     }
 }
 
+void print_field_status(const std::vector<double> &u)
+{
+    auto min_max = std::minmax_element(u.begin(), u.end());
+    double sum = std::accumulate(u.begin(), u.end(), 0.0);
+    double mean = sum / static_cast<double>(u.size());
+    std::cout << "min temperature: " << *min_max.first << "\n";
+    std::cout << "max temperature: " << *min_max.second << "\n";
+    std::cout << "mean temperature: " << mean << "\n";
+}
+
 int main(int argc, char **argv)
 {
     int nx = 64;
@@ -100,6 +112,10 @@ int main(int argc, char **argv)
     }
     if (argc >= 4)
     {
+        if (std::stod(argv[3]) > 0.25)
+        {
+            std::cerr << "alpha must be less than or equal to 0.25" << "\n";
+        }
         alpha = std::stod(argv[3]);
     }
     std::vector<double> u_new(nx * ny, 0.0);
@@ -113,11 +129,15 @@ int main(int argc, char **argv)
     }
     auto end = std::chrono::high_resolution_clock::now();
     double runtime = std::chrono::duration<double>(end - start).count();
+    double MLPS = (num_step * (nx - 2) * (ny - 2)) / (runtime * 1000000);
+
     write_csv(u_old, "results/heat_final.csv", nx, ny);
-    std::cout << " Grid: " << nx << " x " << ny << "\n";
+    std::cout << "Grid: " << nx << " x " << ny << "\n";
     std::cout << "Steps: " << num_step << "\n";
     std::cout << "Alpha: " << alpha << "\n";
     std::cout << "Run_time: " << runtime << "\n";
+    std::cout << "MLPS: " << MLPS << "\n";
     std::cout << "Wrote results/heat_final.csv\n";
+    print_field_status(u_old);
     return 0;
 }
