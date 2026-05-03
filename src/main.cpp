@@ -3,6 +3,7 @@
 #include <fstream>
 #include <string>
 #include <utility>
+#include <chrono>
 
 int idx(int x, int y, int nx)
 {
@@ -104,12 +105,19 @@ int main(int argc, char **argv)
     std::vector<double> u_new(nx * ny, 0.0);
     std::vector<double> u_old(nx * ny, 0.0);
     initial_t_field(u_old, nx, ny);
+    auto start = std::chrono::high_resolution_clock::now();
     for (int step = 0; step < num_step; step++)
     {
         step_heat(u_old, u_new, nx, ny, alpha);
         std::swap(u_old, u_new);
     }
+    auto end = std::chrono::high_resolution_clock::now();
+    double runtime = std::chrono::duration<double>(end - start).count();
     write_csv(u_old, "results/heat_final.csv", nx, ny);
+    std::cout << " Grid: " << nx << " x " << ny << "\n";
+    std::cout << "Steps: " << num_step << "\n";
+    std::cout << "Alpha: " << alpha << "\n";
+    std::cout << "Run_time: " << runtime << "\n";
     std::cout << "Wrote results/heat_final.csv\n";
     return 0;
 }
