@@ -1,1 +1,1 @@
-/usr/bin/c++ CMakeFiles/heat2d.dir/src/main.cpp.o CMakeFiles/heat2d.dir/src/heat_solver.cpp.o -o heat2d 
+/usr/bin/c++ CMakeFiles/heat2d.dir/src/heat_main.cpp.o CMakeFiles/heat2d.dir/src/heat_solver.cpp.o -o heat2d 

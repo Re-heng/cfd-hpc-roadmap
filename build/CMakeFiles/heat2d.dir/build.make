@@ -69,19 +69,19 @@ include CMakeFiles/heat2d.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/heat2d.dir/flags.make
 
-CMakeFiles/heat2d.dir/src/main.cpp.o: CMakeFiles/heat2d.dir/flags.make
-CMakeFiles/heat2d.dir/src/main.cpp.o: ../src/main.cpp
-CMakeFiles/heat2d.dir/src/main.cpp.o: CMakeFiles/heat2d.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/heng/dev/cfd-hpc-roadmap/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/heat2d.dir/src/main.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/heat2d.dir/src/main.cpp.o -MF CMakeFiles/heat2d.dir/src/main.cpp.o.d -o CMakeFiles/heat2d.dir/src/main.cpp.o -c /home/heng/dev/cfd-hpc-roadmap/src/main.cpp
+CMakeFiles/heat2d.dir/src/heat_main.cpp.o: CMakeFiles/heat2d.dir/flags.make
+CMakeFiles/heat2d.dir/src/heat_main.cpp.o: ../src/heat_main.cpp
+CMakeFiles/heat2d.dir/src/heat_main.cpp.o: CMakeFiles/heat2d.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/heng/dev/cfd-hpc-roadmap/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/heat2d.dir/src/heat_main.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/heat2d.dir/src/heat_main.cpp.o -MF CMakeFiles/heat2d.dir/src/heat_main.cpp.o.d -o CMakeFiles/heat2d.dir/src/heat_main.cpp.o -c /home/heng/dev/cfd-hpc-roadmap/src/heat_main.cpp
 
-CMakeFiles/heat2d.dir/src/main.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/heat2d.dir/src/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/heng/dev/cfd-hpc-roadmap/src/main.cpp > CMakeFiles/heat2d.dir/src/main.cpp.i
+CMakeFiles/heat2d.dir/src/heat_main.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/heat2d.dir/src/heat_main.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/heng/dev/cfd-hpc-roadmap/src/heat_main.cpp > CMakeFiles/heat2d.dir/src/heat_main.cpp.i
 
-CMakeFiles/heat2d.dir/src/main.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/heat2d.dir/src/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/heng/dev/cfd-hpc-roadmap/src/main.cpp -o CMakeFiles/heat2d.dir/src/main.cpp.s
+CMakeFiles/heat2d.dir/src/heat_main.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/heat2d.dir/src/heat_main.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/heng/dev/cfd-hpc-roadmap/src/heat_main.cpp -o CMakeFiles/heat2d.dir/src/heat_main.cpp.s
 
 CMakeFiles/heat2d.dir/src/heat_solver.cpp.o: CMakeFiles/heat2d.dir/flags.make
 CMakeFiles/heat2d.dir/src/heat_solver.cpp.o: ../src/heat_solver.cpp
@@ -99,13 +99,13 @@ CMakeFiles/heat2d.dir/src/heat_solver.cpp.s: cmake_force
 
 # Object files for target heat2d
 heat2d_OBJECTS = \
-"CMakeFiles/heat2d.dir/src/main.cpp.o" \
+"CMakeFiles/heat2d.dir/src/heat_main.cpp.o" \
 "CMakeFiles/heat2d.dir/src/heat_solver.cpp.o"
 
 # External object files for target heat2d
 heat2d_EXTERNAL_OBJECTS =
 
-heat2d: CMakeFiles/heat2d.dir/src/main.cpp.o
+heat2d: CMakeFiles/heat2d.dir/src/heat_main.cpp.o
 heat2d: CMakeFiles/heat2d.dir/src/heat_solver.cpp.o
 heat2d: CMakeFiles/heat2d.dir/build.make
 heat2d: CMakeFiles/heat2d.dir/link.txt
