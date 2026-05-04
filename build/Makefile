@@ -129,6 +129,30 @@ heat2d/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/heat2d.dir/build.make CMakeFiles/heat2d.dir/build
 .PHONY : heat2d/fast
 
+src/heat_solver.o: src/heat_solver.cpp.o
+.PHONY : src/heat_solver.o
+
+# target to build an object file
+src/heat_solver.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/heat2d.dir/build.make CMakeFiles/heat2d.dir/src/heat_solver.cpp.o
+.PHONY : src/heat_solver.cpp.o
+
+src/heat_solver.i: src/heat_solver.cpp.i
+.PHONY : src/heat_solver.i
+
+# target to preprocess a source file
+src/heat_solver.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/heat2d.dir/build.make CMakeFiles/heat2d.dir/src/heat_solver.cpp.i
+.PHONY : src/heat_solver.cpp.i
+
+src/heat_solver.s: src/heat_solver.cpp.s
+.PHONY : src/heat_solver.s
+
+# target to generate assembly for a file
+src/heat_solver.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/heat2d.dir/build.make CMakeFiles/heat2d.dir/src/heat_solver.cpp.s
+.PHONY : src/heat_solver.cpp.s
+
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
 
@@ -162,6 +186,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... heat2d"
+	@echo "... src/heat_solver.o"
+	@echo "... src/heat_solver.i"
+	@echo "... src/heat_solver.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

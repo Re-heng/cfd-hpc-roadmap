@@ -1,4 +1,6 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/heat2d.dir/src/heat_solver.cpp.o"
+  "CMakeFiles/heat2d.dir/src/heat_solver.cpp.o.d"
   "CMakeFiles/heat2d.dir/src/main.cpp.o"
   "CMakeFiles/heat2d.dir/src/main.cpp.o.d"
   "heat2d"

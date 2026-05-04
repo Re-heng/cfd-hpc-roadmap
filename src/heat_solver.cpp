@@ -1,0 +1,93 @@
+#include "heat_solver.hpp"
+
+#include <algorithm>
+#include <numeric>
+#include <iostream>
+#include <fstream>
+
+int idx(int x, int y, int nx)
+{
+    return nx * y + x;
+}
+
+void write_csv(const std::vector<double> &u,
+               const std::string &filename,
+               int nx,
+               int ny)
+{
+    std::ofstream file(filename);
+    for (int j = 0; j < ny; j++)
+    {
+        for (int i = 0; i < nx; i++)
+        {
+            if (i == nx - 1)
+            {
+                file << u[idx(i, j, nx)];
+            }
+            else
+            {
+                file << u[idx(i, j, nx)];
+                file << ',';
+            }
+        }
+        if (j != ny - 1)
+        {
+            file << '\n';
+        }
+    }
+}
+
+void initial_t_field(std::vector<double> &u,
+                     int nx,
+                     int ny)
+{
+    for (int j = 0; j < ny; j++)
+    {
+        for (int i = 0; i < nx; i++)
+        {
+
+            if (i >= 1.0 / 4.0 * nx && i < 3.0 / 4.0 * nx && j >= 1.0 / 4.0 * ny && j < 3.0 / 4.0 * ny)
+            {
+                u[idx(i, j, nx)] = 40;
+            }
+        }
+    }
+}
+
+void print_field(const std::vector<double> &u,
+                 int nx,
+                 int ny)
+{
+    for (int j = 0; j <= ny - 1; j++)
+    {
+        for (int i = 0; i <= nx - 1; i++)
+        {
+            std::cout << u[idx(i, j, nx)] << ' ';
+        }
+        std::cout << std::endl;
+    }
+}
+void step_heat(const std::vector<double> &u_old,
+               std::vector<double> &u_new,
+               int nx,
+               int ny,
+               double alpha)
+{
+    for (int j = 1; j < ny - 1; j++)
+    {
+        for (int i = 1; i < nx - 1; i++)
+        {
+            u_new[idx(i, j, nx)] = u_old[idx(i, j, nx)] + alpha * (u_old[idx(i - 1, j, nx)] + u_old[idx(i + 1, j, nx)] + u_old[idx(i, j - 1, nx)] + u_old[idx(i, j + 1, nx)] - 4 * u_old[idx(i, j, nx)]);
+        }
+    }
+}
+
+void print_field_stats(const std::vector<double> &u)
+{
+    auto min_max = std::minmax_element(u.begin(), u.end());
+    double sum = std::accumulate(u.begin(), u.end(), 0.0);
+    double mean = sum / static_cast<double>(u.size());
+    std::cout << "min temperature: " << *min_max.first << "\n";
+    std::cout << "max temperature: " << *min_max.second << "\n";
+    std::cout << "mean temperature: " << mean << "\n";
+}

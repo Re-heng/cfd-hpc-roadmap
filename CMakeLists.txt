@@ -4,4 +4,9 @@ project(cfd_hpc_raodmap LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(heat2d src/main.cpp)
+add_executable(heat2d
+    src/main.cpp
+    src/heat_solver.cpp
+)
+
+target_include_directories(heat2d PRIVATE include)
