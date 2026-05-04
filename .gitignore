@@ -1,0 +1,16 @@
+# CMake build directory
+build/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Python virtual environments
+.venv/
+
+# Simulation output CSV files
+results/*.csv
+
+# Temporary files
+*.tmp
+*.log

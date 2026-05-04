@@ -84,7 +84,7 @@ void step_heat(const std::vector<double> &u_old,
     }
 }
 
-void print_field_status(const std::vector<double> &u)
+void print_field_stats(const std::vector<double> &u)
 {
     auto min_max = std::minmax_element(u.begin(), u.end());
     double sum = std::accumulate(u.begin(), u.end(), 0.0);
@@ -99,7 +99,7 @@ int main(int argc, char **argv)
     int nx = 64;
     int ny = 64;
     double alpha = 0.25;
-    int num_step = 500;
+    int num_steps = 500;
 
     if (argc >= 2)
     {
@@ -108,7 +108,7 @@ int main(int argc, char **argv)
     }
     if (argc >= 3)
     {
-        num_step = std::stoi(argv[2]);
+        num_steps = std::stoi(argv[2]);
     }
     if (argc >= 4)
     {
@@ -121,23 +121,24 @@ int main(int argc, char **argv)
     std::vector<double> u_new(nx * ny, 0.0);
     std::vector<double> u_old(nx * ny, 0.0);
     initial_t_field(u_old, nx, ny);
+    write_csv(u_old, "results/heat_initial.csv", nx, ny);
     auto start = std::chrono::high_resolution_clock::now();
-    for (int step = 0; step < num_step; step++)
+    for (int step = 0; step < num_steps; step++)
     {
         step_heat(u_old, u_new, nx, ny, alpha);
         std::swap(u_old, u_new);
     }
     auto end = std::chrono::high_resolution_clock::now();
     double runtime = std::chrono::duration<double>(end - start).count();
-    double MLPS = (num_step * (nx - 2) * (ny - 2)) / (runtime * 1000000);
+    double MLUPS = (num_steps * (nx - 2) * (ny - 2)) / (runtime * 1000000);
 
     write_csv(u_old, "results/heat_final.csv", nx, ny);
     std::cout << "Grid: " << nx << " x " << ny << "\n";
-    std::cout << "Steps: " << num_step << "\n";
+    std::cout << "Steps: " << num_steps << "\n";
     std::cout << "Alpha: " << alpha << "\n";
     std::cout << "Run_time: " << runtime << "\n";
-    std::cout << "MLPS: " << MLPS << "\n";
+    std::cout << "MLUPS: " << MLUPS << "\n";
     std::cout << "Wrote results/heat_final.csv\n";
-    print_field_status(u_old);
+    print_field_stats(u_old);
     return 0;
 }
