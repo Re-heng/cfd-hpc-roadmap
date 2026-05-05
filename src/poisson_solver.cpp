@@ -55,16 +55,16 @@ void write_field(const std::vector<double> &u, const std::string &filename, int 
     }
 }
 
-void update_field(std::vector<double> &u_old,
-                  std::vector<double> &u_new,
-                  int nx,
-                  int ny,
-                  double dif_stop)
+void jacobi_update_field(std::vector<double> &u_old,
+                         std::vector<double> &u_new,
+                         int nx,
+                         int ny,
+                         double dif_stop)
 {
     // 用来按照中心点温度是四周的平均值方式更新温度,直至最大误差小于目标误差,并且记录一个迭代误差的过程。
     double dif_now = 0;
     int i = 0;
-    std::ofstream file("results/dif_record.csv");
+    std::ofstream file("results/jacobi_convence.csv");
     do
     {
         dif_now = 0;
@@ -85,6 +85,79 @@ void update_field(std::vector<double> &u_old,
             }
         }
         std::swap(u_old, u_new);
+        file << i << "," << dif_now << "\n";
+        // std::cout << i << "," << dif_now << "\n";
+
+    } while ((dif_now > dif_stop) || i >= 50000);
+}
+
+void gauss_update_field(std::vector<double> &u,
+                        int nx,
+                        int ny,
+                        double dif_stop)
+{
+    // 用来按照中心点温度是四周的平均值方式更新温度,直至最大误差小于目标误差,并且记录一个迭代误差的过程。
+    double dif_now = 0;
+    int i = 0;
+    std::ofstream file("results/gauss_convence.csv");
+    do
+    {
+        dif_now = 0;
+        i = i + 1;
+        for (int y = 1; y < ny - 1; y++)
+        {
+            for (int x = 1; x < nx - 1; x++)
+            {
+                double old_value = u[idx(x, y, nx)];
+                u[idx(x, y, nx)] = (u[idx(x - 1, y, nx)] +
+                                    u[idx(x + 1, y, nx)] +
+                                    u[idx(x, y - 1, nx)] +
+                                    u[idx(x, y + 1, nx)]) /
+                                   4;
+                if (std::abs(old_value - u[idx(x, y, nx)]) > dif_now)
+                {
+                    dif_now = std::abs(old_value - u[idx(x, y, nx)]);
+                }
+            }
+        }
+        file << i << "," << dif_now << "\n";
+        // std::cout << i << "," << dif_now << "\n";
+
+    } while ((dif_now > dif_stop) || i >= 50000);
+}
+
+void SOR_update_field(std::vector<double> &u,
+                      int nx,
+                      int ny,
+                      double dif_stop,
+                      double omega)
+{
+    // 用来按照中心点温度是四周的平均值方式更新温度,直至最大误差小于目标误差,并且记录一个迭代误差的过程。
+    double dif_now = 0;
+    int i = 0;
+    std::ofstream file("results/SOR_convence.csv");
+    do
+    {
+        dif_now = 0;
+        i = i + 1;
+        for (int y = 1; y < ny - 1; y++)
+        {
+            for (int x = 1; x < nx - 1; x++)
+            {
+                double old_value = u[idx(x, y, nx)];
+                double dif = (u[idx(x - 1, y, nx)] +
+                              u[idx(x + 1, y, nx)] +
+                              u[idx(x, y - 1, nx)] +
+                              u[idx(x, y + 1, nx)]) /
+                                 4 -
+                             old_value;
+                u[idx(x, y, nx)] = omega * dif + old_value;
+                if (std::abs(old_value - u[idx(x, y, nx)]) > dif_now)
+                {
+                    dif_now = std::abs(old_value - u[idx(x, y, nx)]);
+                }
+            }
+        }
         file << i << "," << dif_now << "\n";
         // std::cout << i << "," << dif_now << "\n";
 

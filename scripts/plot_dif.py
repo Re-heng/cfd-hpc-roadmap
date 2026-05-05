@@ -1,19 +1,52 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.transforms import blended_transform_factory
 
-record = np.loadtxt("results/dif_record.csv", delimiter=",")
-iteration = record[:, 0]
-dif = record[:, 1]
+record_jacobi = np.loadtxt("results/jacobi_convence.csv", delimiter=",")
+iteration_jacobi = record_jacobi[:, 0]
+dif_jacobi = record_jacobi[:, 1]
 
-fig, ax = plt.subplots(1, 2, figsize=(8, 5))
-im1 = ax[0].semilogy(iteration, dif)
-im2 = ax[1].plot(iteration, dif)
+record_gauss = np.loadtxt("results/gauss_convence.csv", delimiter=",")
+iteration_gauss = record_gauss[:, 0]
+dif_gauss = record_gauss[:, 1]
 
-ax[0].set_title("semilogy_iteration_dif")
-ax[1].set_title("plot_iteration_dif")
+record_SOR = np.loadtxt("results/SOR_convence.csv", delimiter=",")
+iteration_SOR = record_SOR[:, 0]
+dif_SOR = record_SOR[:, 1]
 
-ax[0].set_xlabel("iteration")
-ax[1].set_xlabel("iteration")
-ax[0].set_ylabel("dif")
-ax[1].set_ylabel("dif")
-fig.savefig("results/iteration_dif.png", dpi=200)
+final_jacobi = iteration_jacobi[-1]
+final_gauss = iteration_gauss[-1]
+final_SOR = iteration_SOR[-1]
+
+fig, ax = plt.subplots(1, 1, figsize=(10, 5))
+im1 = ax.semilogy(iteration_jacobi, dif_jacobi, label="jacobi")
+im1 = ax.semilogy(iteration_gauss, dif_gauss, label="gauss")
+im1 = ax.semilogy(iteration_SOR, dif_SOR, label="SOR(omega = 1.5)")
+
+ax.axvline(x=final_jacobi, color="blue", linestyle="--", alpha=0.6)
+ax.axvline(x=final_gauss, color="orange", linestyle="--", alpha=0.6)
+ax.axvline(x=final_SOR, color="green", linestyle="--", alpha=0.6)
+
+text_y_pos = 0.09
+
+ax.text(
+    final_jacobi - 300, text_y_pos, f"Iter = {final_jacobi}", color="blue", ha="right"
+)
+ax.text(
+    final_gauss - 300, text_y_pos, f"Iter = {final_gauss}", color="orange", ha="right"
+)
+ax.text(final_SOR - 300, text_y_pos, f"Iter = {final_SOR}", color="green", ha="right")
+
+ax.set_title("three method convergence performance")
+ax.set_xlabel("iteration")
+ax.set_ylabel("diff")
+
+transform = blended_transform_factory(ax.transData, ax.transAxes)
+ax.legend(
+    loc="upper right",
+    bbox_to_anchor=(final_jacobi - 500, 0.95),
+    bbox_transform=transform,
+)
+ax.grid(True, which="both", linestyle="--", alpha=0.4)
+
+fig.savefig("results/convence_dif.png", dpi=200)

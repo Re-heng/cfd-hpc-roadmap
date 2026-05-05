@@ -14,14 +14,11 @@ int main()
 
     initial_t_field(u_old, 100, 10, 20, 40, nx, ny);
     initial_t_field(u_new, 100, 10, 20, 40, nx, ny);
-    write_field(u_old, "results/poisson_start.csv", nx, ny);
-    update_field(u_old, u_new, nx, ny, 1e-6);
-    write_field(u_new, "results/poisson_final.csv", nx, ny);
-    /*   for (int i = 0; i < 10; i++)
-       {·
-           std::swap(u_old, u_new);
-           update_field_single(u_old, u_new, nx, ny);
-       }
-       write_field(u_new, "results/poisson_step10.csv", nx, ny);
-   */
+
+    // write_field(u_old, "results/poisson_start.csv", nx, ny);
+    // jacobi_update_field(u_old, u_new, nx, ny, 1e-6);
+    // write_field(u_new, "results/poisson_final.csv", nx, ny);
+
+    // gauss_update_field(u_old, nx, ny, 1e-6);
+    SOR_update_field(u_old, nx, ny, 1e-6, 1.5);
 }
