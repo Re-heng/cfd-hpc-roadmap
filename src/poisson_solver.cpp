@@ -55,59 +55,38 @@ void write_field(const std::vector<double> &u, const std::string &filename, int 
     }
 }
 
-void update_field_single(std::vector<double> &u_old,
-                         std::vector<double> &u_new,
-                         int nx,
-                         int ny)
+void update_field(std::vector<double> &u_old,
+                  std::vector<double> &u_new,
+                  int nx,
+                  int ny,
+                  double dif_stop)
 {
-    // 用来按照中心点温度是四周的平均值方式更新温度,仅仅更新一次。
-    for (int y = 1; y < ny - 1; y++)
+    // 用来按照中心点温度是四周的平均值方式更新温度,直至最大误差小于目标误差,并且记录一个迭代误差的过程。
+    double dif_now = 0;
+    int i = 0;
+    std::ofstream file("results/dif_record.csv");
+    do
     {
-        for (int x = 1; x < nx - 1; x++)
-        {
-            u_new[idx(x, y, nx)] = (u_old[idx(x - 1, y, nx)] +
-                                    u_old[idx(x + 1, y, nx)] +
-                                    u_old[idx(x, y - 1, nx)] +
-                                    u_old[idx(x, y + 1, nx)]) /
-                                   4;
-        }
-    }
-}
-
-void update_field_final(std::vector<double> &u_old,
-                        std::vector<double> &u_new,
-                        int nx,
-                        int ny,
-                        double stop_dif)
-{
-    // 用来按照中心点温度是四周的平均值方式更新温度,直至更新前后对应点的最大温差绝对值小于 stop_dif
-    update_field_single(u_old, u_new, nx, ny);
-    double max_dif = 0;
-    for (int y = 1; y < ny - 1; y++)
-    {
-        for (int x = 1; x < nx - 1; x++)
-        {
-            if (std::abs(u_new[idx(x, y, nx)] - u_old[idx(x, y, nx)]) > max_dif)
-            {
-                max_dif = std::abs(u_new[idx(x, y, nx)] - u_old[idx(x, y, nx)]);
-            }
-        }
-    }
-    while (max_dif > stop_dif)
-    {
-        std::swap(u_old, u_new);
-        std::cout << "dif now :" << max_dif;
-        update_field_single(u_old, u_new, nx, ny);
-        max_dif = 0;
+        dif_now = 0;
+        i = i + 1;
         for (int y = 1; y < ny - 1; y++)
         {
             for (int x = 1; x < nx - 1; x++)
             {
-                if (std::abs(u_new[idx(x, y, nx)] - u_old[idx(x, y, nx)]) > max_dif)
+                u_new[idx(x, y, nx)] = (u_old[idx(x - 1, y, nx)] +
+                                        u_old[idx(x + 1, y, nx)] +
+                                        u_old[idx(x, y - 1, nx)] +
+                                        u_old[idx(x, y + 1, nx)]) /
+                                       4;
+                if (std::abs(u_new[idx(x, y, nx)] - u_old[idx(x, y, nx)]) > dif_now)
                 {
-                    max_dif = std::abs(u_new[idx(x, y, nx)] - u_old[idx(x, y, nx)]);
+                    dif_now = std::abs(u_new[idx(x, y, nx)] - u_old[idx(x, y, nx)]);
                 }
             }
         }
-    }
+        std::swap(u_old, u_new);
+        file << i << "," << dif_now << "\n";
+        // std::cout << i << "," << dif_now << "\n";
+
+    } while ((dif_now > dif_stop) || i >= 50000);
 }
