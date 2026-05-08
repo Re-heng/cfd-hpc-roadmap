@@ -6,6 +6,7 @@
 #include <fstream>
 #include <utility>
 #include <cmath>
+#include <chrono>
 
 int idx(int x, int y, int nx)
 {
@@ -55,7 +56,7 @@ void write_field(const std::vector<double> &u, const std::string &filename, int 
     }
 }
 
-void jacobi_update_field(std::vector<double> &u_old,
+SolveResult solve_jacobi(std::vector<double> &u_old,
                          std::vector<double> &u_new,
                          int nx,
                          int ny,
@@ -65,6 +66,7 @@ void jacobi_update_field(std::vector<double> &u_old,
     double dif_now = 0;
     int i = 0;
     std::ofstream file("results/jacobi_convence.csv");
+    auto start = std::chrono::high_resolution_clock::now();
     do
     {
         dif_now = 0;
@@ -88,10 +90,24 @@ void jacobi_update_field(std::vector<double> &u_old,
         file << i << "," << dif_now << "\n";
         // std::cout << i << "," << dif_now << "\n";
 
-    } while ((dif_now > dif_stop) || i >= 50000);
+    } while ((dif_now > dif_stop) && i < 50000);
+    auto end = std::chrono::high_resolution_clock::now();
+    double runtime = std::chrono::duration<double>(end - start).count();
+    bool converged = true;
+    double mlups = (i * (nx - 2) * (ny - 2)) / (1000000 * runtime);
+    if (i == 50000)
+    {
+        converged = false;
+    }
+    return SolveResult{
+        i,
+        dif_now,
+        runtime,
+        mlups,
+        converged};
 }
 
-void gauss_update_field(std::vector<double> &u,
+SolveResult solve_gauss(std::vector<double> &u,
                         int nx,
                         int ny,
                         double dif_stop)
@@ -100,6 +116,7 @@ void gauss_update_field(std::vector<double> &u,
     double dif_now = 0;
     int i = 0;
     std::ofstream file("results/gauss_convence.csv");
+    auto start = std::chrono::high_resolution_clock::now();
     do
     {
         dif_now = 0;
@@ -123,10 +140,24 @@ void gauss_update_field(std::vector<double> &u,
         file << i << "," << dif_now << "\n";
         // std::cout << i << "," << dif_now << "\n";
 
-    } while ((dif_now > dif_stop) || i >= 50000);
+    } while ((dif_now > dif_stop) && i < 50000);
+    auto end = std::chrono::high_resolution_clock::now();
+    double runtime = std::chrono::duration<double>(end - start).count();
+    bool converged = true;
+    double mlups = (i * (nx - 2) * (ny - 2)) / (1000000 * runtime);
+    if (i == 50000)
+    {
+        converged = false;
+    }
+    return SolveResult{
+        i,
+        dif_now,
+        runtime,
+        mlups,
+        converged};
 }
 
-void SOR_update_field(std::vector<double> &u,
+SolveResult solve_SOR(std::vector<double> &u,
                       int nx,
                       int ny,
                       double dif_stop,
@@ -136,6 +167,7 @@ void SOR_update_field(std::vector<double> &u,
     double dif_now = 0;
     int i = 0;
     std::ofstream file("results/SOR_convence.csv");
+    auto start = std::chrono::high_resolution_clock::now();
     do
     {
         dif_now = 0;
@@ -161,5 +193,19 @@ void SOR_update_field(std::vector<double> &u,
         file << i << "," << dif_now << "\n";
         // std::cout << i << "," << dif_now << "\n";
 
-    } while ((dif_now > dif_stop) || i >= 50000);
+    } while ((dif_now > dif_stop) && i < 50000);
+    auto end = std::chrono::high_resolution_clock::now();
+    double runtime = std::chrono::duration<double>(end - start).count();
+    bool converged = true;
+    double mlups = (i * (nx - 2) * (ny - 2)) / (1000000 * runtime);
+    if (i == 50000)
+    {
+        converged = false;
+    }
+    return SolveResult{
+        i,
+        dif_now,
+        runtime,
+        mlups,
+        converged};
 }

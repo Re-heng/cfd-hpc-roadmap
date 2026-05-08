@@ -1,5 +1,4 @@
 #include "poisson_solver.hpp"
-
 #include <vector>
 #include <string>
 #include <iostream>
@@ -20,5 +19,7 @@ int main()
     // write_field(u_new, "results/poisson_final.csv", nx, ny);
 
     // gauss_update_field(u_old, nx, ny, 1e-6);
-    SOR_update_field(u_old, nx, ny, 1e-6, 1.5);
+    SolveResult jacobi_results = solve_jacobi(u_old, u_new, nx, ny, 1e-6);
+    SolveResult gauss_results = solve_gauss(u_old, nx, ny, 1e-6);
+    SolveResult SOR_results = solve_SOR(u_old, nx, ny, 1e-6, 1.5);
 }

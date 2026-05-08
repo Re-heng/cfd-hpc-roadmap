@@ -3,6 +3,16 @@
 #include <vector>
 #include <string>
 
+// 结构体 SolveResult : int iterations, double finnal_diff , double runtime , double mlups, bool converged
+struct SolveResult
+{
+    int iterations;
+    double finnal_diff;
+    double runtime;
+    double mlups;
+    bool converged;
+};
+
 int idx(int i, int j, int nx);
 // 输入一个矩阵，矩阵中一个元素的位置，得到存储在vector中的位置
 
@@ -18,20 +28,20 @@ void initial_t_field(std::vector<double> &u,
 void write_field(const std::vector<double> &u, const std::string &filename, int nx, int ny);
 // 输入一个温度场，文件名，以及网格长度宽度，将温度场写入到文件名中
 
-void jacobi_update_field(std::vector<double> &u_old,
+SolveResult solve_jacobi(std::vector<double> &u_old,
                          std::vector<double> &u_new,
                          int nx,
                          int ny,
                          double dif_stop);
 // 用来按照中心点温度是四周的平均值方式更新温度,直至最大误差小于目标误差。
 
-void gauss_update_field(std::vector<double> &u,
+SolveResult solve_gauss(std::vector<double> &u,
                         int nx,
                         int ny,
                         double dif_stop);
 // gauss方法，仅仅需要一个vector
 
-void SOR_update_field(std::vector<double> &u,
+SolveResult solve_SOR(std::vector<double> &u,
                       int nx,
                       int ny,
                       double dif_stop,
