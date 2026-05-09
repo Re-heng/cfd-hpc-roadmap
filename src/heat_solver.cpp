@@ -50,6 +50,10 @@ void initial_t_field(std::vector<double> &u,
             {
                 u[idx(i, j, nx)] = 40;
             }
+            else
+            {
+                u[idx(i, j, nx)] = 0;
+            }
         }
     }
 }
@@ -67,17 +71,21 @@ void print_field(const std::vector<double> &u,
         std::cout << std::endl;
     }
 }
-void step_heat(const std::vector<double> &u_old,
-               std::vector<double> &u_new,
-               int nx,
-               int ny,
-               double alpha)
+void step_heat_serial(const std::vector<double> &u_old,
+                      std::vector<double> &u_new,
+                      int nx,
+                      int ny,
+                      double alpha)
 {
     for (int j = 1; j < ny - 1; j++)
     {
         for (int i = 1; i < nx - 1; i++)
         {
-            u_new[idx(i, j, nx)] = u_old[idx(i, j, nx)] + alpha * (u_old[idx(i - 1, j, nx)] + u_old[idx(i + 1, j, nx)] + u_old[idx(i, j - 1, nx)] + u_old[idx(i, j + 1, nx)] - 4 * u_old[idx(i, j, nx)]);
+            u_new[idx(i, j, nx)] = u_old[idx(i, j, nx)] + alpha * (u_old[idx(i - 1, j, nx)] +
+                                                                   u_old[idx(i + 1, j, nx)] +
+                                                                   u_old[idx(i, j - 1, nx)] +
+                                                                   u_old[idx(i, j + 1, nx)] -
+                                                                   4 * u_old[idx(i, j, nx)]);
         }
     }
 }
@@ -90,4 +98,24 @@ void print_field_stats(const std::vector<double> &u)
     std::cout << "min temperature: " << *min_max.first << "\n";
     std::cout << "max temperature: " << *min_max.second << "\n";
     std::cout << "mean temperature: " << mean << "\n";
+}
+
+void step_heat_omp(const std::vector<double> &u_old,
+                   std::vector<double> &u_new,
+                   int nx,
+                   int ny,
+                   double alpha)
+{
+#pragma omp parallel for schedule(static)
+    for (int j = 1; j < ny - 1; j++)
+    {
+        for (int i = 1; i < nx - 1; i++)
+        {
+            u_new[idx(i, j, nx)] = u_old[idx(i, j, nx)] + alpha * (u_old[idx(i - 1, j, nx)] +
+                                                                   u_old[idx(i + 1, j, nx)] +
+                                                                   u_old[idx(i, j - 1, nx)] +
+                                                                   u_old[idx(i, j + 1, nx)] -
+                                                                   4 * u_old[idx(i, j, nx)]);
+        }
+    }
 }

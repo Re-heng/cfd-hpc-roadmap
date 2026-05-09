@@ -108,6 +108,8 @@ heat2d_EXTERNAL_OBJECTS =
 heat2d: CMakeFiles/heat2d.dir/src/heat_main.cpp.o
 heat2d: CMakeFiles/heat2d.dir/src/heat_solver.cpp.o
 heat2d: CMakeFiles/heat2d.dir/build.make
+heat2d: /usr/lib/gcc/x86_64-linux-gnu/11/libgomp.so
+heat2d: /usr/lib/x86_64-linux-gnu/libpthread.a
 heat2d: CMakeFiles/heat2d.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/heng/dev/cfd-hpc-roadmap/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable heat2d"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/heat2d.dir/link.txt --verbose=$(VERBOSE)

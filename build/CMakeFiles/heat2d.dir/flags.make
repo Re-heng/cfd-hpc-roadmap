@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = -I/home/heng/dev/cfd-hpc-roadmap/include
 
-CXX_FLAGS = -std=gnu++17
+CXX_FLAGS = -fopenmp -std=gnu++17
 

@@ -18,10 +18,16 @@ void print_field(const std::vector<double> &u,
                  int nx,
                  int ny);
 
-void step_heat(const std::vector<double> &u_old,
-               std::vector<double> &u_new,
-               int nx,
-               int ny,
-               double alpha);
+void step_heat_serial(const std::vector<double> &u_old,
+                      std::vector<double> &u_new,
+                      int nx,
+                      int ny,
+                      double alpha);
+
+void step_heat_omp(const std::vector<double> &u_old,
+                   std::vector<double> &u_new,
+                   int nx,
+                   int ny,
+                   double alpha);
 
 void print_field_stats(const std::vector<double> &u);

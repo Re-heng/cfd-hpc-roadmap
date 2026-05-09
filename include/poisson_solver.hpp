@@ -7,7 +7,7 @@
 struct SolveResult
 {
     int iterations;
-    double finnal_diff;
+    double final_diff;
     double runtime;
     double mlups;
     bool converged;
