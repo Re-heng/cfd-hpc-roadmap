@@ -198,7 +198,8 @@ CMakeFiles/heat2d.dir/src/heat_main.cpp.o: ../src/heat_main.cpp \
   /usr/include/c++/11/bits/codecvt.h \
   /usr/include/x86_64-linux-gnu/c++/11/bits/basic_file.h \
   /usr/include/x86_64-linux-gnu/c++/11/bits/c++io.h \
-  /usr/include/c++/11/bits/fstream.tcc
+  /usr/include/c++/11/bits/fstream.tcc \
+  /usr/lib/gcc/x86_64-linux-gnu/11/include/omp.h
 
 CMakeFiles/heat2d.dir/src/heat_solver.cpp.o: ../src/heat_solver.cpp \
   /usr/include/stdc-predef.h \
@@ -869,6 +870,8 @@ CMakeFiles/heat2d.dir/src/heat_solver.cpp.o: ../src/heat_solver.cpp \
 /usr/include/c++/11/bits/string_view.tcc:
 
 /usr/include/c++/11/bits/hash_bytes.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/11/include/omp.h:
 
 /usr/include/stdlib.h:
 

@@ -17,3 +17,4 @@ add_executable(poisson
 target_include_directories(heat2d PRIVATE include)
 target_link_libraries(heat2d PRIVATE OpenMP::OpenMP_CXX)
 target_include_directories(poisson PRIVATE include)
+target_link_libraries(poisson PRIVATE OpenMP::OpenMP_CXX)

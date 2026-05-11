@@ -33,6 +33,13 @@ void initial_t_field(std::vector<double> &u,
         u[idx(0, y, nx)] = t_left;
         u[idx(nx - 1, y, nx)] = t_right;
     }
+    for (int y = 1; y < ny - 1; y++)
+    {
+        for (int x = 1; x < nx; x++)
+        {
+            u[idx(x, y, nx)] = 0;
+        }
+    }
 }
 
 void write_field(const std::vector<double> &u, const std::string &filename, int nx, int ny)
@@ -65,7 +72,7 @@ SolveResult solve_jacobi(std::vector<double> &u_old,
     // 用来按照中心点温度是四周的平均值方式更新温度,直至最大误差小于目标误差,并且记录一个迭代误差的过程。
     double dif_now = 0;
     int i = 0;
-    std::ofstream file("results/jacobi_convence.csv");
+    // std::ofstream file("results/jacobi_convence.csv");
     auto start = std::chrono::high_resolution_clock::now();
     do
     {
@@ -87,7 +94,7 @@ SolveResult solve_jacobi(std::vector<double> &u_old,
             }
         }
         std::swap(u_old, u_new);
-        file << i << "," << dif_now << "\n";
+        // file << i << "," << dif_now << "\n";
         // std::cout << i << "," << dif_now << "\n";
 
     } while ((dif_now > dif_stop) && i < 50000);
@@ -194,6 +201,134 @@ SolveResult solve_SOR(std::vector<double> &u,
         // std::cout << i << "," << dif_now << "\n";
 
     } while ((dif_now > dif_stop) && i < 50000);
+    auto end = std::chrono::high_resolution_clock::now();
+    double runtime = std::chrono::duration<double>(end - start).count();
+    bool converged = true;
+    double mlups = (i * (nx - 2) * (ny - 2)) / (1000000 * runtime);
+    if (i == 50000)
+    {
+        converged = false;
+    }
+    return SolveResult{
+        i,
+        dif_now,
+        runtime,
+        mlups,
+        converged};
+}
+
+SolveResult solve_jacobi_omp(std::vector<double> &u_old,
+                             std::vector<double> &u_new,
+                             int nx,
+                             int ny,
+                             double dif_stop)
+{
+    // 用来按照中心点温度是四周的平均值方式更新温度,直至最大误差小于目标误差,并且记录一个迭代误差的过程。
+    double dif_now = 0;
+    int i = 0;
+    std::ofstream file("results/jacobi_convence.csv");
+    auto start = std::chrono::high_resolution_clock::now();
+    do
+    {
+        dif_now = 0;
+        i = i + 1;
+#pragma omp parallel for reduction(max : dif_now) schedule(static)
+        for (int y = 1; y < ny - 1; y++)
+        {
+            for (int x = 1; x < nx - 1; x++)
+            {
+                u_new[idx(x, y, nx)] = (u_old[idx(x - 1, y, nx)] +
+                                        u_old[idx(x + 1, y, nx)] +
+                                        u_old[idx(x, y - 1, nx)] +
+                                        u_old[idx(x, y + 1, nx)]) /
+                                       4;
+                if (std::abs(u_new[idx(x, y, nx)] - u_old[idx(x, y, nx)]) > dif_now)
+                {
+                    dif_now = std::abs(u_new[idx(x, y, nx)] - u_old[idx(x, y, nx)]);
+                }
+            }
+        }
+        std::swap(u_old, u_new);
+        // file << i << "," << dif_now << "\n";
+        // std::cout << i << "," << dif_now << "\n";
+
+    } while ((dif_now > dif_stop) && i < 50000);
+    auto end = std::chrono::high_resolution_clock::now();
+    double runtime = std::chrono::duration<double>(end - start).count();
+    bool converged = true;
+    double mlups = (i * (nx - 2) * (ny - 2)) / (1000000 * runtime);
+    if (i == 50000)
+    {
+        converged = false;
+    }
+    return SolveResult{
+        i,
+        dif_now,
+        runtime,
+        mlups,
+        converged};
+}
+
+SolveResult solve_gauss_omp(std::vector<double> &u,
+                            int nx,
+                            int ny,
+                            double dif_stop)
+{
+    // 用来按照中心点温度是四周的平均值方式更新温度,直至最大误差小于目标误差,并且记录一个迭代误差的过程。
+    double dif_now = 0;
+    int i = 0;
+    // std::ofstream file("results/gauss_convence.csv");
+    auto start = std::chrono::high_resolution_clock::now();
+    do
+    {
+        dif_now = 0;
+        i = i + 1;
+#pragma omp parallel for reduction(max : dif_now) schedule(static)
+        for (int y = 1; y < ny - 1; y++)
+        {
+            for (int x = 1; x < nx - 1; x++)
+            {
+                if ((x + y) % 2 == 0)
+                {
+                    double old_value = u[idx(x, y, nx)];
+                    u[idx(x, y, nx)] = (u[idx(x - 1, y, nx)] +
+                                        u[idx(x + 1, y, nx)] +
+                                        u[idx(x, y - 1, nx)] +
+                                        u[idx(x, y + 1, nx)]) /
+                                       4;
+                    if (std::abs(old_value - u[idx(x, y, nx)]) > dif_now)
+                    {
+                        dif_now = std::abs(old_value - u[idx(x, y, nx)]);
+                    }
+                }
+            }
+        }
+#pragma omp parallel for reduction(max : dif_now) schedule(static)
+        for (int y = 1; y < ny - 1; y++)
+        {
+            for (int x = 1; x < nx - 1; x++)
+            {
+                if ((x + y) % 2 == 1)
+                {
+                    double old_value = u[idx(x, y, nx)];
+                    u[idx(x, y, nx)] = (u[idx(x - 1, y, nx)] +
+                                        u[idx(x + 1, y, nx)] +
+                                        u[idx(x, y - 1, nx)] +
+                                        u[idx(x, y + 1, nx)]) /
+                                       4;
+                    if (std::abs(old_value - u[idx(x, y, nx)]) > dif_now)
+                    {
+                        dif_now = std::abs(old_value - u[idx(x, y, nx)]);
+                    }
+                }
+            }
+        }
+
+        // file << i << "," << dif_now << "\n";
+        // std::cout << i << "," << dif_now << "\n";
+
+    } while ((dif_now > dif_stop) && i < 50000);
+
     auto end = std::chrono::high_resolution_clock::now();
     double runtime = std::chrono::duration<double>(end - start).count();
     bool converged = true;

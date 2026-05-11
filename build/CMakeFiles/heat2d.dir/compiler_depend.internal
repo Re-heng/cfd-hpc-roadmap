@@ -200,6 +200,7 @@ CMakeFiles/heat2d.dir/src/heat_main.cpp.o
  /usr/include/x86_64-linux-gnu/c++/11/bits/basic_file.h
  /usr/include/x86_64-linux-gnu/c++/11/bits/c++io.h
  /usr/include/c++/11/bits/fstream.tcc
+ /usr/lib/gcc/x86_64-linux-gnu/11/include/omp.h
 
 CMakeFiles/heat2d.dir/src/heat_solver.cpp.o
  /home/heng/dev/cfd-hpc-roadmap/src/heat_solver.cpp

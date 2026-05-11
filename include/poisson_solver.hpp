@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 
-// 结构体 SolveResult : int iterations, double finnal_diff , double runtime , double mlups, bool converged
+// 结构体 SolveResult : int iterations, double final_diff , double runtime , double mlups, bool converged
 struct SolveResult
 {
     int iterations;
@@ -47,3 +47,16 @@ SolveResult solve_SOR(std::vector<double> &u,
                       double dif_stop,
                       double omega);
 // SOR方法，加入了一个新参数omega
+
+SolveResult solve_jacobi_omp(std::vector<double> &u_old,
+                             std::vector<double> &u_new,
+                             int nx,
+                             int ny,
+                             double dif_stop);
+// jacobi并行加速版
+
+SolveResult solve_gauss_omp(std::vector<double> &u,
+                            int nx,
+                            int ny,
+                            double dif_stop);
+// gauss并行加速，check-board ordering
