@@ -1,4 +1,5 @@
 /home/heng/dev/cfd-hpc-roadmap/build/CMakeFiles/heat2d.dir
 /home/heng/dev/cfd-hpc-roadmap/build/CMakeFiles/poisson.dir
+/home/heng/dev/cfd-hpc-roadmap/build/CMakeFiles/vector_add_cuda.dir
 /home/heng/dev/cfd-hpc-roadmap/build/CMakeFiles/edit_cache.dir
 /home/heng/dev/cfd-hpc-roadmap/build/CMakeFiles/rebuild_cache.dir

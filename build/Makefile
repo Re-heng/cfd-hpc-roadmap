@@ -142,6 +142,19 @@ poisson/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/poisson.dir/build.make CMakeFiles/poisson.dir/build
 .PHONY : poisson/fast
 
+#=============================================================================
+# Target rules for targets named vector_add_cuda
+
+# Build rule for target.
+vector_add_cuda: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 vector_add_cuda
+.PHONY : vector_add_cuda
+
+# fast build rule for target.
+vector_add_cuda/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/vector_add_cuda.dir/build.make CMakeFiles/vector_add_cuda.dir/build
+.PHONY : vector_add_cuda/fast
+
 src/heat_main.o: src/heat_main.cpp.o
 .PHONY : src/heat_main.o
 
@@ -238,6 +251,30 @@ src/poisson_solver.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/poisson.dir/build.make CMakeFiles/poisson.dir/src/poisson_solver.cpp.s
 .PHONY : src/poisson_solver.cpp.s
 
+src/vector_add_cuda.o: src/vector_add_cuda.cu.o
+.PHONY : src/vector_add_cuda.o
+
+# target to build an object file
+src/vector_add_cuda.cu.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/vector_add_cuda.dir/build.make CMakeFiles/vector_add_cuda.dir/src/vector_add_cuda.cu.o
+.PHONY : src/vector_add_cuda.cu.o
+
+src/vector_add_cuda.i: src/vector_add_cuda.cu.i
+.PHONY : src/vector_add_cuda.i
+
+# target to preprocess a source file
+src/vector_add_cuda.cu.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/vector_add_cuda.dir/build.make CMakeFiles/vector_add_cuda.dir/src/vector_add_cuda.cu.i
+.PHONY : src/vector_add_cuda.cu.i
+
+src/vector_add_cuda.s: src/vector_add_cuda.cu.s
+.PHONY : src/vector_add_cuda.s
+
+# target to generate assembly for a file
+src/vector_add_cuda.cu.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/vector_add_cuda.dir/build.make CMakeFiles/vector_add_cuda.dir/src/vector_add_cuda.cu.s
+.PHONY : src/vector_add_cuda.cu.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -248,6 +285,7 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... heat2d"
 	@echo "... poisson"
+	@echo "... vector_add_cuda"
 	@echo "... src/heat_main.o"
 	@echo "... src/heat_main.i"
 	@echo "... src/heat_main.s"
@@ -260,6 +298,9 @@ help:
 	@echo "... src/poisson_solver.o"
 	@echo "... src/poisson_solver.i"
 	@echo "... src/poisson_solver.s"
+	@echo "... src/vector_add_cuda.o"
+	@echo "... src/vector_add_cuda.i"
+	@echo "... src/vector_add_cuda.s"
 .PHONY : help
 
 
