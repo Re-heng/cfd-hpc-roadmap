@@ -13,10 +13,11 @@
 // Each CUDA thread executes this same function.
 // The thread computes its own global index i,
 // then handles one element: c[i] = a[i] + b[i].
-__global__ void vector_add_kernel(const float* a,
-                                  const float* b,
-                                  float* c,
-                                  int n) {
+__global__ void vector_add_kernel(const float *a,
+                                  const float *b,
+                                  float *c,
+                                  int n)
+{
     // blockIdx.x  : which block am I in?
     // blockDim.x  : how many threads are in each block?
     // threadIdx.x : which thread am I inside this block?
@@ -26,12 +27,14 @@ __global__ void vector_add_kernel(const float* a,
 
     // The total number of launched threads may be larger than n.
     // So we must guard against out-of-bounds access.
-    if (i < n) {
+    if (i < n)
+    {
         c[i] = a[i] + b[i];
     }
 }
 
-int main() {
+int main()
+{
     // Number of vector elements.
     // Start with 1 << 20 = 2^20 = 1,048,576 elements.
     int n = 1 << 20;
@@ -50,7 +53,8 @@ int main() {
     std::vector<float> h_c(n);
 
     // Initialize input data on CPU.
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < n; ++i)
+    {
         h_a[i] = 0.5f * static_cast<float>(i);
         h_b[i] = 2.0f * static_cast<float>(i);
     }
@@ -61,19 +65,30 @@ int main() {
     // d_a means device a.
     // d_b means device b.
     // d_c means device c.
-    float* d_a = nullptr;
-    float* d_b = nullptr;
-    float* d_c = nullptr;
+    float *d_a = nullptr;
+    float *d_b = nullptr;
+    float *d_c = nullptr;
 
     // Allocate memory on the GPU.
+
     cudaMalloc(&d_a, bytes);
     cudaMalloc(&d_b, bytes);
     cudaMalloc(&d_c, bytes);
 
+    // create timing event
+    cudaEvent_t start;
+    cudaEvent_t stop;
+
+    cudaEventCreate(&start);
+    cudaEventCreate(&stop);
     // Copy input data from CPU memory to GPU memory.
+    cudaEventRecord(start);
     cudaMemcpy(d_a, h_a.data(), bytes, cudaMemcpyHostToDevice);
     cudaMemcpy(d_b, h_b.data(), bytes, cudaMemcpyHostToDevice);
-
+    cudaEventRecord(stop);
+    cudaEventSynchronize(stop);
+    float h2d_ms = 0.0f;
+    cudaEventElapsedTime(&h2d_ms, start, stop);
     // CUDA launch configuration.
     //
     // block_size:
@@ -97,39 +112,67 @@ int main() {
     // This means:
     //   launch grid_size blocks
     //   each block has block_size threads
+    cudaEventRecord(start);
     vector_add_kernel<<<grid_size, block_size>>>(d_a, d_b, d_c, n);
+    cudaEventRecord(stop);
+    cudaEventSynchronize(stop);
 
+    float kernel_ms = 0.0f;
+    cudaEventElapsedTime(&kernel_ms, start, stop);
     // Wait until GPU work is finished.
     //
     // Kernel launch is asynchronous:
     // CPU may continue immediately unless we synchronize.
-    cudaDeviceSynchronize();
 
     // Copy result from GPU memory back to CPU memory.
+    cudaEventRecord(start);
     cudaMemcpy(h_c.data(), d_c, bytes, cudaMemcpyDeviceToHost);
 
+    cudaEventRecord(stop);
+    cudaEventSynchronize(stop);
+
+    float d2h_ms = 0.0f;
+    cudaEventElapsedTime(&d2h_ms, start, stop);
     // Verify correctness on CPU.
     float max_error = 0.0f;
 
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < n; ++i)
+    {
         float expected = h_a[i] + h_b[i];
         float error = std::fabs(h_c[i] - expected);
 
-        if (error > max_error) {
+        if (error > max_error)
+        {
             max_error = error;
         }
     }
 
     // Print basic information.
-    std::cout << "n = " << n << "\n";
-    std::cout << "block_size = " << block_size << "\n";
-    std::cout << "grid_size = " << grid_size << "\n";
-    std::cout << "total_threads = " << grid_size * block_size << "\n";
-    std::cout << "max_error = " << max_error << "\n";
+    float total_ms = h2d_ms + kernel_ms + d2h_ms;
 
-    if (max_error < 1e-5f) {
+    double h2d_gb = static_cast<double>(2 * bytes) / 1e9;
+    double d2h_gb = static_cast<double>(bytes) / 1e9;
+
+    double h2d_bandwidth = h2d_gb / (h2d_ms / 1000.0);
+    double d2h_bandwidth = d2h_gb / (d2h_ms / 1000.0);
+
+    double million_elements_per_second =
+        static_cast<double>(n) / (kernel_ms / 1000.0) / 1e6;
+
+    std::cout << "h2d_ms = " << h2d_ms << "\n";
+    std::cout << "kernel_ms = " << kernel_ms << "\n";
+    std::cout << "d2h_ms = " << d2h_ms << "\n";
+    std::cout << "total_cuda_ms = " << total_ms << "\n";
+    std::cout << "h2d_bandwidth_GBps = " << h2d_bandwidth << "\n";
+    std::cout << "d2h_bandwidth_GBps = " << d2h_bandwidth << "\n";
+    std::cout << "kernel_MElems_per_sec = " << million_elements_per_second << "\n";
+
+    if (max_error < 1e-5f)
+    {
         std::cout << "PASS\n";
-    } else {
+    }
+    else
+    {
         std::cout << "FAIL\n";
     }
 
