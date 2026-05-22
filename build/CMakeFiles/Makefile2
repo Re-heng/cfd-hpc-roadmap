@@ -66,6 +66,7 @@ CMAKE_BINARY_DIR = /home/heng/dev/cfd-hpc-roadmap/build
 all: CMakeFiles/heat2d.dir/all
 all: CMakeFiles/poisson.dir/all
 all: CMakeFiles/vector_add_cuda.dir/all
+all: CMakeFiles/heat_2d_cuda.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -76,6 +77,7 @@ preinstall:
 clean: CMakeFiles/heat2d.dir/clean
 clean: CMakeFiles/poisson.dir/clean
 clean: CMakeFiles/vector_add_cuda.dir/clean
+clean: CMakeFiles/heat_2d_cuda.dir/clean
 .PHONY : clean
 
 #=============================================================================
@@ -111,7 +113,7 @@ CMakeFiles/heat2d.dir/clean:
 CMakeFiles/poisson.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/poisson.dir/build.make CMakeFiles/poisson.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/poisson.dir/build.make CMakeFiles/poisson.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/heng/dev/cfd-hpc-roadmap/build/CMakeFiles --progress-num=4,5,6 "Built target poisson"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/heng/dev/cfd-hpc-roadmap/build/CMakeFiles --progress-num=7,8,9 "Built target poisson"
 .PHONY : CMakeFiles/poisson.dir/all
 
 # Build rule for subdir invocation for target.
@@ -137,7 +139,7 @@ CMakeFiles/poisson.dir/clean:
 CMakeFiles/vector_add_cuda.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/vector_add_cuda.dir/build.make CMakeFiles/vector_add_cuda.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/vector_add_cuda.dir/build.make CMakeFiles/vector_add_cuda.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/heng/dev/cfd-hpc-roadmap/build/CMakeFiles --progress-num=7,8 "Built target vector_add_cuda"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/heng/dev/cfd-hpc-roadmap/build/CMakeFiles --progress-num=10,11 "Built target vector_add_cuda"
 .PHONY : CMakeFiles/vector_add_cuda.dir/all
 
 # Build rule for subdir invocation for target.
@@ -155,6 +157,32 @@ vector_add_cuda: CMakeFiles/vector_add_cuda.dir/rule
 CMakeFiles/vector_add_cuda.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/vector_add_cuda.dir/build.make CMakeFiles/vector_add_cuda.dir/clean
 .PHONY : CMakeFiles/vector_add_cuda.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/heat_2d_cuda.dir
+
+# All Build rule for target.
+CMakeFiles/heat_2d_cuda.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/heat_2d_cuda.dir/build.make CMakeFiles/heat_2d_cuda.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/heat_2d_cuda.dir/build.make CMakeFiles/heat_2d_cuda.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/heng/dev/cfd-hpc-roadmap/build/CMakeFiles --progress-num=4,5,6 "Built target heat_2d_cuda"
+.PHONY : CMakeFiles/heat_2d_cuda.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/heat_2d_cuda.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/heng/dev/cfd-hpc-roadmap/build/CMakeFiles 3
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/heat_2d_cuda.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/heng/dev/cfd-hpc-roadmap/build/CMakeFiles 0
+.PHONY : CMakeFiles/heat_2d_cuda.dir/rule
+
+# Convenience name for target.
+heat_2d_cuda: CMakeFiles/heat_2d_cuda.dir/rule
+.PHONY : heat_2d_cuda
+
+# clean rule for target.
+CMakeFiles/heat_2d_cuda.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/heat_2d_cuda.dir/build.make CMakeFiles/heat_2d_cuda.dir/clean
+.PHONY : CMakeFiles/heat_2d_cuda.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

@@ -49,4 +49,5 @@ set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/heat2d.dir/DependInfo.cmake"
   "CMakeFiles/poisson.dir/DependInfo.cmake"
   "CMakeFiles/vector_add_cuda.dir/DependInfo.cmake"
+  "CMakeFiles/heat_2d_cuda.dir/DependInfo.cmake"
   )

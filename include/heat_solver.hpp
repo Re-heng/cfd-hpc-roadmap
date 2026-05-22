@@ -3,7 +3,18 @@
 #include <string>
 #include <vector>
 
-int idx(int x, int y, int nx);
+#ifdef __CUDACC__
+#define HD __host__ __device__
+#define FINLINE __forceinline__
+#else
+#define HD
+#define FINLINE inline
+#endif
+
+HD FINLINE int idx(int x, int y, int nx)
+{
+    return nx * y + x;
+}
 
 void write_csv(const std::vector<double> &u,
                const std::string &filename,

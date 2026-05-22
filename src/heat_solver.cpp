@@ -5,11 +5,6 @@
 #include <iostream>
 #include <fstream>
 
-int idx(int x, int y, int nx)
-{
-    return nx * y + x;
-}
-
 void write_csv(const std::vector<double> &u,
                const std::string &filename,
                int nx,

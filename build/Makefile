@@ -155,6 +155,43 @@ vector_add_cuda/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/vector_add_cuda.dir/build.make CMakeFiles/vector_add_cuda.dir/build
 .PHONY : vector_add_cuda/fast
 
+#=============================================================================
+# Target rules for targets named heat_2d_cuda
+
+# Build rule for target.
+heat_2d_cuda: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 heat_2d_cuda
+.PHONY : heat_2d_cuda
+
+# fast build rule for target.
+heat_2d_cuda/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/heat_2d_cuda.dir/build.make CMakeFiles/heat_2d_cuda.dir/build
+.PHONY : heat_2d_cuda/fast
+
+src/heat_2d_cuda.o: src/heat_2d_cuda.cu.o
+.PHONY : src/heat_2d_cuda.o
+
+# target to build an object file
+src/heat_2d_cuda.cu.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/heat_2d_cuda.dir/build.make CMakeFiles/heat_2d_cuda.dir/src/heat_2d_cuda.cu.o
+.PHONY : src/heat_2d_cuda.cu.o
+
+src/heat_2d_cuda.i: src/heat_2d_cuda.cu.i
+.PHONY : src/heat_2d_cuda.i
+
+# target to preprocess a source file
+src/heat_2d_cuda.cu.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/heat_2d_cuda.dir/build.make CMakeFiles/heat_2d_cuda.dir/src/heat_2d_cuda.cu.i
+.PHONY : src/heat_2d_cuda.cu.i
+
+src/heat_2d_cuda.s: src/heat_2d_cuda.cu.s
+.PHONY : src/heat_2d_cuda.s
+
+# target to generate assembly for a file
+src/heat_2d_cuda.cu.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/heat_2d_cuda.dir/build.make CMakeFiles/heat_2d_cuda.dir/src/heat_2d_cuda.cu.s
+.PHONY : src/heat_2d_cuda.cu.s
+
 src/heat_main.o: src/heat_main.cpp.o
 .PHONY : src/heat_main.o
 
@@ -185,6 +222,7 @@ src/heat_solver.o: src/heat_solver.cpp.o
 # target to build an object file
 src/heat_solver.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/heat2d.dir/build.make CMakeFiles/heat2d.dir/src/heat_solver.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/heat_2d_cuda.dir/build.make CMakeFiles/heat_2d_cuda.dir/src/heat_solver.cpp.o
 .PHONY : src/heat_solver.cpp.o
 
 src/heat_solver.i: src/heat_solver.cpp.i
@@ -193,6 +231,7 @@ src/heat_solver.i: src/heat_solver.cpp.i
 # target to preprocess a source file
 src/heat_solver.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/heat2d.dir/build.make CMakeFiles/heat2d.dir/src/heat_solver.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/heat_2d_cuda.dir/build.make CMakeFiles/heat_2d_cuda.dir/src/heat_solver.cpp.i
 .PHONY : src/heat_solver.cpp.i
 
 src/heat_solver.s: src/heat_solver.cpp.s
@@ -201,6 +240,7 @@ src/heat_solver.s: src/heat_solver.cpp.s
 # target to generate assembly for a file
 src/heat_solver.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/heat2d.dir/build.make CMakeFiles/heat2d.dir/src/heat_solver.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/heat_2d_cuda.dir/build.make CMakeFiles/heat_2d_cuda.dir/src/heat_solver.cpp.s
 .PHONY : src/heat_solver.cpp.s
 
 src/laplace_main.o: src/laplace_main.cpp.o
@@ -284,8 +324,12 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... heat2d"
+	@echo "... heat_2d_cuda"
 	@echo "... poisson"
 	@echo "... vector_add_cuda"
+	@echo "... src/heat_2d_cuda.o"
+	@echo "... src/heat_2d_cuda.i"
+	@echo "... src/heat_2d_cuda.s"
 	@echo "... src/heat_main.o"
 	@echo "... src/heat_main.i"
 	@echo "... src/heat_main.s"
