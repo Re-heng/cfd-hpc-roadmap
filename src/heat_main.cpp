@@ -12,10 +12,10 @@
 
 int main(int argc, char **argv)
 {
-    int nx = 64;
-    int ny = 64;
-    double alpha = 0.25;
-    int num_steps = 500;
+    int nx = 500;
+    int ny = 500;
+    double alpha = 0.2;
+    int num_steps = 10000;
 
     if (argc >= 2)
     {
@@ -53,6 +53,7 @@ int main(int argc, char **argv)
     auto end = std::chrono::high_resolution_clock::now();
     double runtime = std::chrono::duration<double>(end - start).count();
     double MLUPS = (num_steps * (nx - 2) * (ny - 2)) / (runtime * 1000000);
+    write_csv(u_old, "results/heat2d/serial_heat.csv", nx, ny);
     file << "serial," << "1," << runtime << "," << MLUPS << "," << "1" << "\n";
     double runtime_serial = runtime;
     // write_csv(u_old, "results/heat_final_serial.csv", nx, ny);
@@ -86,6 +87,10 @@ int main(int argc, char **argv)
         }
         end = std::chrono::high_resolution_clock::now();
 #endif
+        if (thread == 16)
+        {
+            write_csv(u_old, "results/heat2d/openmp_heat.csv", nx, ny);
+        }
         runtime = std::chrono::duration<double>(end - start).count();
         MLUPS = (num_steps * (nx - 2) * (ny - 2)) / (runtime * 1000000);
         file << "omp," << thread << "," << runtime << "," << MLUPS << "," << runtime_serial / runtime << "\n";
