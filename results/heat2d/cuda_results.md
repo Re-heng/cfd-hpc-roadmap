@@ -39,7 +39,40 @@
 
 ## Correctness validation
 
-```text
 max difference between serial and cuda is 0.00030000000000285354
 max difference between serial and openmp is 0.0
 max difference between cuda and openmp is 0.00030000000000285354
+
+## Cuda performance of different grid size
+
+use dim1 cuda
+grid size: 1000 x 1000
+steps: 1000
+host to device time :1.40938
+gpu solve time :22.1439
+device to host time 0.685824
+total time 24.2391
+
+use dim1 cuda
+grid size: 10000 x 10000
+steps: 1000
+host to device time :120.8
+gpu solve time :1980.83
+device to host time 59.6578
+total time 2161.29
+
+use dim2 cuda
+grid size: 1000 x 1000
+steps: 1000
+host to device time :1.40886
+gpu solve time :21.8632
+device to host time 0.670112
+total time 23.9421
+
+use dim2 cuda
+grid size: 10000 x 10000
+steps: 1000
+host to device time :120.745
+gpu solve time :1965.43
+device to host time 60.0726
+total time 2146.24

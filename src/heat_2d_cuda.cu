@@ -6,11 +6,11 @@
 #include <string>
 #include "heat_solver.hpp"
 
-__global__ void heat_solver_kernel(float *u_old,
-                                   float *u_new,
-                                   int nx,
-                                   int ny,
-                                   float alpha)
+__global__ void heat_solver_kernel_dim1(float *u_old,
+                                        float *u_new,
+                                        int nx,
+                                        int ny,
+                                        float alpha)
 {
     int i = blockIdx.x * blockDim.x + threadIdx.x;
     if (i < nx * ny)
@@ -28,6 +28,24 @@ __global__ void heat_solver_kernel(float *u_old,
     }
 }
 
+__global__ void heat_solver_kernel_dim2(float *u_old,
+                                        float *u_new,
+                                        int nx,
+                                        int ny,
+                                        float alpha)
+{
+    int x = blockIdx.x * blockDim.x + threadIdx.x;
+    int y = blockIdx.y * blockDim.y + threadIdx.y;
+    if (x > 0 && x < nx - 1 && y > 0 && y < ny - 1)
+    {
+        u_new[idx(x, y, nx)] = u_old[idx(x, y, nx)] + alpha * (u_old[idx(x - 1, y, nx)] +
+                                                               u_old[idx(x + 1, y, nx)] +
+                                                               u_old[idx(x, y - 1, nx)] +
+                                                               u_old[idx(x, y + 1, nx)] -
+                                                               4 * u_old[idx(x, y, nx)]);
+    }
+}
+
 int main(int argc, char **argv)
 {
     // 完成一波host中的两个温度场初始化。
@@ -35,6 +53,9 @@ int main(int argc, char **argv)
     int ny = 500;
     float alpha = 0.2;
     int steps = 1000;
+    int cuda_dim_mode = 2;
+    int write = 0;
+
     if (argc > 1)
     {
         nx = std::stoi(argv[1]);
@@ -42,11 +63,19 @@ int main(int argc, char **argv)
     }
     if (argc > 2)
     {
-        alpha = std::stoi(argv[2]);
+        alpha = std::stof(argv[2]);
     }
     if (argc > 3)
     {
         steps = std::stoi(argv[3]);
+    }
+    if (argc > 4)
+    {
+        write = std::stoi(argv[4]);
+    }
+    if (argc > 5)
+    {
+        cuda_dim_mode = std::stoi(argv[5]);
     }
 
     std::vector<double> h_u_old(nx * ny, 0.0);
@@ -87,12 +116,33 @@ int main(int argc, char **argv)
     int block_size = 256;
     int grid_size = (nx * ny + block_size - 1) / block_size;
 
+    dim3 block_dim(16, 16);
+    dim3 grid_dim(
+        (nx + block_dim.x - 1) / block_dim.x,
+        (ny + block_dim.y - 1) / block_dim.y);
+
     cudaEventRecord(start);
-    for (int step = 0; step < steps; step++)
+
+    if (cuda_dim_mode == 1)
     {
-        heat_solver_kernel<<<grid_size, block_size>>>(d_u_old, d_u_new, nx, ny, alpha);
-        std::swap(d_u_old, d_u_new);
+        std::cout << "use dim1 cuda" << "\n";
+        for (int step = 0; step < steps; step++)
+        {
+            heat_solver_kernel_dim1<<<grid_size, block_size>>>(d_u_old, d_u_new, nx, ny, alpha);
+            std::swap(d_u_old, d_u_new);
+        }
     }
+
+    else
+    {
+        std::cout << "use dim2 cuda" << "\n";
+        for (int step = 0; step < steps; step++)
+        {
+            heat_solver_kernel_dim2<<<grid_dim, block_dim>>>(d_u_old, d_u_new, nx, ny, alpha);
+            std::swap(d_u_old, d_u_new);
+        }
+    }
+
     cudaEventRecord(stop);
     cudaEventSynchronize(stop);
     float d_solve_ms = 0.0f;
@@ -108,12 +158,6 @@ int main(int argc, char **argv)
     for (int i = 0; i < h_u_new.size(); i++)
     {
         h_u_new[i] = static_cast<double>(h_u_newf[i]);
-    }
-
-    int write = 0;
-    if (argc > 4)
-    {
-        write = std::stoi(argv[4]);
     }
 
     if (write)
