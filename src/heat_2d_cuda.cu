@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <chrono>
 #include "heat_solver.hpp"
 
 __global__ void heat_solver_kernel_dim1(float *u_old,
@@ -48,6 +49,9 @@ __global__ void heat_solver_kernel_dim2(float *u_old,
 
 int main(int argc, char **argv)
 {
+    // 加入计时
+    auto cpu_setup_start = std::chrono::high_resolution_clock::now();
+
     // 完成一波host中的两个温度场初始化。
     int nx = 500;
     int ny = 500;
@@ -93,6 +97,9 @@ int main(int argc, char **argv)
     std::size_t bytes = static_cast<std::size_t>(nx * ny) * sizeof(float);
     float *d_u_old = nullptr;
     float *d_u_new = nullptr;
+
+    auto cpu_setup_end = std::chrono::high_resolution_clock::now();
+    double cpu_setup_time = std::chrono::duration<double, std::milli>(cpu_setup_end - cpu_setup_start).count();
 
     cudaMalloc(&d_u_old, bytes);
     cudaMalloc(&d_u_new, bytes);
@@ -165,10 +172,17 @@ int main(int argc, char **argv)
         write_csv(h_u_new, "results/heat2d/cuda_heat.csv", nx, ny);
     }
 
+    auto endtime = std::chrono ::high_resolution_clock ::now();
+    auto total_time_ms = std::chrono::duration<double, std::milli>(endtime - cpu_setup_start).count();
+
     std::cout << "grid size: " << nx << " x " << ny << "\n";
     std::cout << "steps: " << steps << "\n";
-    std::cout << "host to device time :" << h2d_ms << "\n";
-    std::cout << "gpu solve time :" << d_solve_ms << "\n";
-    std::cout << "device to host time " << d2h_ms << "\n";
-    std::cout << "total time " << h2d_ms + d_solve_ms + d2h_ms << "\n";
+    std::cout << "alpha: " << alpha << "\n";
+    std::cout << "cpu_setup: " << cpu_setup_time << "ms\n";
+    std::cout << "host to device time :" << h2d_ms << "ms\n";
+    std::cout << "gpu solve time :" << d_solve_ms << "ms\n";
+    std::cout << "device to host time " << d2h_ms << "ms\n";
+    std::cout << "cuda_total time " << h2d_ms + d_solve_ms + d2h_ms << "ms\n";
+    std::cout << "total time: " << total_time_ms << "ms\n";
+    std::cout << "unmeasured_overhead_ms: " << total_time_ms - cpu_setup_time - (h2d_ms + d_solve_ms + d2h_ms) << "ms\n";
 }

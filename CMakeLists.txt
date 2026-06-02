@@ -30,8 +30,13 @@ add_executable(heat_2d_cuda
     src/heat_2d_cuda.cu
     src/heat_solver.cpp)
 
+add_executable(poisson_cuda
+    src/poisson_cuda.cu
+    src/poisson_solver.cpp)
+
 target_include_directories(heat2d PRIVATE include)
 target_link_libraries(heat2d PRIVATE OpenMP::OpenMP_CXX)
 target_include_directories(poisson PRIVATE include)
 target_link_libraries(poisson PRIVATE OpenMP::OpenMP_CXX)
 target_include_directories(heat_2d_cuda PRIVATE include)
+target_include_directories(poisson_cuda PRIVATE include)

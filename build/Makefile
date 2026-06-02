@@ -168,6 +168,19 @@ heat_2d_cuda/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/heat_2d_cuda.dir/build.make CMakeFiles/heat_2d_cuda.dir/build
 .PHONY : heat_2d_cuda/fast
 
+#=============================================================================
+# Target rules for targets named poisson_cuda
+
+# Build rule for target.
+poisson_cuda: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 poisson_cuda
+.PHONY : poisson_cuda
+
+# fast build rule for target.
+poisson_cuda/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/poisson_cuda.dir/build.make CMakeFiles/poisson_cuda.dir/build
+.PHONY : poisson_cuda/fast
+
 src/heat_2d_cuda.o: src/heat_2d_cuda.cu.o
 .PHONY : src/heat_2d_cuda.o
 
@@ -267,12 +280,37 @@ src/laplace_main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/poisson.dir/build.make CMakeFiles/poisson.dir/src/laplace_main.cpp.s
 .PHONY : src/laplace_main.cpp.s
 
+src/poisson_cuda.o: src/poisson_cuda.cu.o
+.PHONY : src/poisson_cuda.o
+
+# target to build an object file
+src/poisson_cuda.cu.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/poisson_cuda.dir/build.make CMakeFiles/poisson_cuda.dir/src/poisson_cuda.cu.o
+.PHONY : src/poisson_cuda.cu.o
+
+src/poisson_cuda.i: src/poisson_cuda.cu.i
+.PHONY : src/poisson_cuda.i
+
+# target to preprocess a source file
+src/poisson_cuda.cu.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/poisson_cuda.dir/build.make CMakeFiles/poisson_cuda.dir/src/poisson_cuda.cu.i
+.PHONY : src/poisson_cuda.cu.i
+
+src/poisson_cuda.s: src/poisson_cuda.cu.s
+.PHONY : src/poisson_cuda.s
+
+# target to generate assembly for a file
+src/poisson_cuda.cu.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/poisson_cuda.dir/build.make CMakeFiles/poisson_cuda.dir/src/poisson_cuda.cu.s
+.PHONY : src/poisson_cuda.cu.s
+
 src/poisson_solver.o: src/poisson_solver.cpp.o
 .PHONY : src/poisson_solver.o
 
 # target to build an object file
 src/poisson_solver.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/poisson.dir/build.make CMakeFiles/poisson.dir/src/poisson_solver.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/poisson_cuda.dir/build.make CMakeFiles/poisson_cuda.dir/src/poisson_solver.cpp.o
 .PHONY : src/poisson_solver.cpp.o
 
 src/poisson_solver.i: src/poisson_solver.cpp.i
@@ -281,6 +319,7 @@ src/poisson_solver.i: src/poisson_solver.cpp.i
 # target to preprocess a source file
 src/poisson_solver.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/poisson.dir/build.make CMakeFiles/poisson.dir/src/poisson_solver.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/poisson_cuda.dir/build.make CMakeFiles/poisson_cuda.dir/src/poisson_solver.cpp.i
 .PHONY : src/poisson_solver.cpp.i
 
 src/poisson_solver.s: src/poisson_solver.cpp.s
@@ -289,6 +328,7 @@ src/poisson_solver.s: src/poisson_solver.cpp.s
 # target to generate assembly for a file
 src/poisson_solver.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/poisson.dir/build.make CMakeFiles/poisson.dir/src/poisson_solver.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/poisson_cuda.dir/build.make CMakeFiles/poisson_cuda.dir/src/poisson_solver.cpp.s
 .PHONY : src/poisson_solver.cpp.s
 
 src/vector_add_cuda.o: src/vector_add_cuda.cu.o
@@ -326,6 +366,7 @@ help:
 	@echo "... heat2d"
 	@echo "... heat_2d_cuda"
 	@echo "... poisson"
+	@echo "... poisson_cuda"
 	@echo "... vector_add_cuda"
 	@echo "... src/heat_2d_cuda.o"
 	@echo "... src/heat_2d_cuda.i"
@@ -339,6 +380,9 @@ help:
 	@echo "... src/laplace_main.o"
 	@echo "... src/laplace_main.i"
 	@echo "... src/laplace_main.s"
+	@echo "... src/poisson_cuda.o"
+	@echo "... src/poisson_cuda.i"
+	@echo "... src/poisson_cuda.s"
 	@echo "... src/poisson_solver.o"
 	@echo "... src/poisson_solver.i"
 	@echo "... src/poisson_solver.s"

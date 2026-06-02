@@ -3,6 +3,14 @@
 #include <vector>
 #include <string>
 
+#ifdef __CUDACC__
+#define HD __host__ __device__
+#define FINLINE __forceinline__
+#else
+#define HD
+#define FINLINE inline
+#endif
+
 // 结构体 SolveResult : int iterations, double final_diff , double runtime , double mlups, bool converged
 struct SolveResult
 {
@@ -13,7 +21,10 @@ struct SolveResult
     bool converged;
 };
 
-int idx(int i, int j, int nx);
+HD FINLINE int idx(int i, int j, int nx)
+{
+    return (nx * j + i);
+}
 // 输入一个矩阵，矩阵中一个元素的位置，得到存储在vector中的位置
 
 void initial_t_field(std::vector<double> &u,
@@ -60,3 +71,15 @@ SolveResult solve_gauss_omp(std::vector<double> &u,
                             int ny,
                             double dif_stop);
 // gauss并行加速，check-board ordering
+
+void vector_double2float(std::vector<double> &u_double,
+                         std::vector<float> &u_float,
+                         int nx,
+                         int ny);
+// 将一个double格式的vector转化为float格式
+
+void vector_float2double(std::vector<float> &u_float,
+                         std::vector<double> &u_double,
+                         int nx,
+                         int ny);
+// 将一个vector格式的vector转化为double格式

@@ -8,12 +8,6 @@
 #include <cmath>
 #include <chrono>
 
-int idx(int x, int y, int nx)
-{
-    // 输入矩阵中一个元素的位置，和矩阵的x长度，得到存储在vector中的位置
-    return (y * nx + x);
-}
-
 void initial_t_field(std::vector<double> &u,
                      double t_top,
                      double t_bottom,
@@ -343,4 +337,27 @@ SolveResult solve_gauss_omp(std::vector<double> &u,
         runtime,
         mlups,
         converged};
+}
+
+void vector_double2float(std::vector<double> &u_double,
+                         std::vector<float> &u_float,
+                         int nx,
+                         int ny)
+{
+    for (int i = 0; i < nx * ny; i++)
+    {
+        u_float[i] = static_cast<float>(u_double[i]);
+    }
+}
+
+void vector_float2double(std::vector<float> &u_float,
+                         std::vector<double> &u_double,
+                         int nx,
+                         int ny)
+// 将一个vector格式的vector转化为double格式
+{
+    for (int i = 0; i < nx * ny; i++)
+    {
+        u_double[i] = static_cast<double>(u_float[i]);
+    }
 }
