@@ -51,6 +51,32 @@ __global__ void update_gauss_color(float *u,
     }
 }
 
+__global__ void update_SOR_color(float *u,
+                                 float *diff,
+                                 int nx,
+                                 int ny,
+                                 float omega,
+                                 int color)
+{
+    int x = blockIdx.x * blockDim.x + threadIdx.x;
+    int y = blockIdx.y * blockDim.y + threadIdx.y;
+    if (x > 0 && x < nx - 1 && y > 0 && y < ny - 1)
+    {
+        if ((x + y) % 2 == color)
+        {
+            float tif = u[idx(x, y, nx)];
+            float delta_u = (u[idx(x - 1, y, nx)] +
+                             u[idx(x + 1, y, nx)] +
+                             u[idx(x, y - 1, nx)] +
+                             u[idx(x, y + 1, nx)]) /
+                                4 -
+                            u[idx(x, y, nx)];
+            u[idx(x, y, nx)] += omega * delta_u;
+            diff[idx(x, y, nx)] = fabsf(tif - u[idx(x, y, nx)]);
+        }
+    }
+}
+
 __global__ void update_diff_block_2d(const float *diff,
                                      float *diff_block,
                                      int nx,
@@ -206,6 +232,44 @@ void gauss_cuda(float *&d_u_old,
         write_field(u_old, "./results/poisson/gauss.csv", nx, ny);
     }
 }
+
+void SOR_cuda(float *&d_u_old,
+              float *d_diff,
+              std::vector<double> &u_old,
+              std::vector<float> &u_old_f,
+              dim3 block_dim,
+              dim3 grid_dim,
+              float goal_diff,
+              int block_size,
+              int write,
+              float *d_buffer_diff1,
+              float *d_buffer_diff2,
+              int &iteration,
+              float &max_diff_now,
+              int max_iteration,
+              int nx,
+              int ny,
+              std::size_t bytes,
+              float omega)
+{
+    do
+    {
+        update_SOR_color<<<grid_dim, block_dim>>>(d_u_old, d_diff, nx, ny, omega, 0);
+        update_SOR_color<<<grid_dim, block_dim>>>(d_u_old, d_diff, nx, ny, omega, 1);
+        iteration += 1;
+        cudaMemcpy(d_buffer_diff1, d_diff, sizeof(float) * static_cast<std::size_t>(nx * ny), cudaMemcpyDeviceToDevice);
+        max_diff_now = reduce_max_dif(d_buffer_diff1, d_buffer_diff2, nx * ny, block_size);
+        std::cout << max_diff_now << ",";
+    } while (max_diff_now > goal_diff && iteration < max_iteration);
+
+    cudaMemcpy(u_old_f.data(), d_u_old, bytes, cudaMemcpyDeviceToHost);
+    vector_float2double(u_old_f, u_old, nx, ny);
+
+    if (write == 1)
+    {
+        write_field(u_old, "./results/poisson/SOR.csv", nx, ny);
+    }
+}
 // 4. main
 
 int main(int argc, char **argv)
@@ -223,6 +287,7 @@ int main(int argc, char **argv)
     float goal_diff = 1e-4f;
     int write = 0;
     int max_iteration = 500000;
+    float omega = 1.5;
 
     if (argc > 1)
     {
@@ -236,6 +301,10 @@ int main(int argc, char **argv)
     if (argc > 3)
     {
         goal_diff = std::stof(argv[3]);
+    }
+    if (argc > 4)
+    {
+        omega = std::stof(argv[4]);
     }
     // 初始化容器
     std::vector<double> u_old(nx * ny, 0.0);
@@ -283,7 +352,10 @@ int main(int argc, char **argv)
     // jacobi_cuda(d_u_old, d_u_new, d_diff, u_old, u_old_f, block_dim, grid_dim, goal_diff, block_size, write, d_buffer_diff1, d_buffer_diff2, iteration, max_diff_now, max_iteration, nx, ny, bytes);
 
     // 执行 gauss迭代法
-    gauss_cuda(d_u_old, d_diff, u_old, u_old_f, block_dim, grid_dim, goal_diff, block_size, write, d_buffer_diff1, d_buffer_diff2, iteration, max_diff_now, max_iteration, nx, ny, bytes);
+    // gauss_cuda(d_u_old, d_diff, u_old, u_old_f, block_dim, grid_dim, goal_diff, block_size, write, d_buffer_diff1, d_buffer_diff2, iteration, max_diff_now, max_iteration, nx, ny, bytes);
+
+    // 执行 SOR迭代法
+    SOR_cuda(d_u_old, d_diff, u_old, u_old_f, block_dim, grid_dim, goal_diff, block_size, write, d_buffer_diff1, d_buffer_diff2, iteration, max_diff_now, max_iteration, nx, ny, bytes, omega);
     auto end = std::chrono::high_resolution_clock::now();
     auto total_time_ms = std::chrono::duration<double, std::milli>(end - start).count();
     std::cout << "grid size: " << nx << " x " << ny << "\n";
