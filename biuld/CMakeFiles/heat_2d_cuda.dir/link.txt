@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/heat_2d_cuda.dir/src/heat_2d_cuda.cu.o CMakeFiles/heat_2d_cuda.dir/src/heat_solver.cpp.o -o heat_2d_cuda   -L/usr/local/cuda-12.2/targets/x86_64-linux/lib/stubs  -L/usr/local/cuda-12.2/targets/x86_64-linux/lib  -lcudadevrt -lcudart_static -lrt -lpthread -ldl 

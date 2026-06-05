@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/poisson_cuda.dir/src/poisson_cuda.cu.o CMakeFiles/poisson_cuda.dir/src/poisson_solver.cpp.o -o poisson_cuda   -L/usr/local/cuda-12.2/targets/x86_64-linux/lib/stubs  -L/usr/local/cuda-12.2/targets/x86_64-linux/lib  -lcudadevrt -lcudart_static -lrt -lpthread -ldl 
